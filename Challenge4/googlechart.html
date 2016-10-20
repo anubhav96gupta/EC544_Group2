@@ -1,0 +1,103 @@
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        
+        var query1 = new google.visualization.Query('https://docs.google.com/spreadsheets/d/1-FuPSTdceTywC3b-TAYMkpDyLr0L6sHl-fUcm4wPJOo/edit#gid=0');
+        query1.setQuery('select B, C');
+        query1.send(handleQueryResponse1);
+
+        var query2 = new google.visualization.Query('https://docs.google.com/spreadsheets/d/141Jb6H0jDJHEJvu91YaLOVK8obq-IHlIUxJhvbkTrl8/edit#gid=0');
+        query2.setQuery('select B, C');
+        query2.send(handleQueryResponse2);
+        
+        var query3 = new google.visualization.Query('https://docs.google.com/spreadsheets/d/1ELKenI-Q1-sDP_uo0fliJ0nb2lN5HxxxmZaxeDN1E-4/edit#gid=0');
+        query3.setQuery('select B, C');
+        query3.send(handleQueryResponse3);
+        
+        var query4 = new google.visualization.Query('https://docs.google.com/spreadsheets/d/1tn59hlECtjwyNelMY7IouB0eRaZNxPgGE2fhJjOxRnM/edit#gid=0');
+        query4.setQuery('select B, C');
+        query4.send(handleQueryResponse4);
+
+        var query5 = new google.visualization.Query('https://docs.google.com/spreadsheets/d/1ik-460YOf6ry7HTwxJTVQ2Esin2TMvi0YNGGbLhu7pg/edit#gid=0');
+        query5.setQuery('select B, C');
+        query5.send(handleQueryResponse5);
+      }
+
+      var options1 = {
+           title: 'temperature1',
+           width: 500,
+           height: 300,
+           legend: 'Group2_P1',
+           vAxis: { 'title': Temperature in Ceilcius }
+         };
+      var options2 = {
+           title: 'temperature2',
+           width: 500,
+           height: 300,
+           legend: 'Group2_P2',
+           vAxis: { 'title': Temperature in Ceilcius }
+         };
+      var options3 = {
+           title: 'temperature3',
+           width: 500,
+           height: 300,
+           legend: 'Group2_P3',
+           vAxis: { 'title': Temperature in Ceilcius }
+         };
+      var options4 = {
+           title: 'temperature4',
+           width: 500,
+           height: 300,
+           legend: 'Group2_P4',
+           vAxis: { 'title': Temperature in Ceilcius }
+         };
+      var options5 = {
+           title: 'temperature5',
+           width: 500,
+           height: 300,
+           legend: 'Group2_P5',
+           vAxis: { 'title': Temperature in Ceilcius }
+         };
+      
+      function handleQueryResponse1(response1) {
+        var data1 = response1.getDataTable();
+        var chart1 = new google.visualization.LineChart(document.getElementById('temperature1'));
+        chart1.draw(data1, options1);
+      }
+      
+      function handleQueryResponse2(response2) {
+        var data2 = response2.getDataTable();
+        var chart2 = new google.visualization.LineChart(document.getElementById('temperature2'));
+        chart2.draw(data2, options2);
+      }
+      function handleQueryResponse3(response3) {
+        var data3 = response3.getDataTable();
+        var chart3 = new google.visualization.LineChart(document.getElementById('temperature3'));
+        chart3.draw(data3, options3);
+      }
+      function handleQueryResponse4(response4) {
+        var data4 = response4.getDataTable();
+        var chart4 = new google.visualization.LineChart(document.getElementById('temperature4'));
+        chart4.draw(data4, options4);
+      }
+      function handleQueryResponse5(response5) {
+        var data5 = response5.getDataTable();
+        var chart5 = new google.visualization.LineChart(document.getElementById('temperature5'));
+        chart5.draw(data5, options5);
+      }
+    </script>
+  </head>
+  <body>
+    <div id="temperature1" style="width: 800px; height: 500px"></div>
+    <div id="temperature2" style="width: 800px; height: 500px"></div>
+    <div id="temperature3" style="width: 800px; height: 500px"></div>
+    <div id="temperature4" style="width: 800px; height: 500px"></div>
+    <div id="temperature5" style="width: 800px; height: 500px"></div>
+    
+    
+</html>
