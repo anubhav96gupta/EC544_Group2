@@ -54,6 +54,13 @@ PID angle_PID(&input_angle, &output_angle, &reference_angle, aKp, aKi, aKd, DIRE
 PID control_PID(&distanceIn, &distanceOut, &reference_distance, dKp, dKi, dKd, DIRECT);
 PID speed_PID(&speed_in, &speed_out, &reference_speed, sKp, sKi, sKd, DIRECT);
 
+// Wheel encoding
+const int wheelSpeedPin = 5;
+volatile int encoderCount = 0;
+double rotationalSpeed;
+#define ENCODER_SCALING = 833.33
+
+
 void setup(){
   // Controls steering
   steering_wheels.attach(D1);
