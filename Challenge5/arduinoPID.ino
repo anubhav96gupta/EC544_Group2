@@ -150,9 +150,29 @@ void loop() {
 
   if(!systemState){
     currentTime = millis();
+    getLidarInfo();
+
+    input_angle = getAngle(wallDistance[0], wallDistance[1]);
+    distanceIn = getWallDistance(wallDistance[0], wallDistance[1], input_angle);
+
+    // Go to radians
+    input_angle = angleChange(input_angle);
+
+    angle_PID.Compute();
+    control_PID.Compute();
+    speed_PID.Compute();
+
+    steering_wheels.write(90 - speed_out);
+    escServo.write(90 + output_angle - distanceOut);
+
 
   }
 } // end of main loop
+
+double angleChange(double oldAng){
+  angle = oldAng * 180 / pi;
+  return angle;
+}
 
 
 int count;
@@ -222,8 +242,13 @@ void getLidarInfo(){
 
   } // end of case machine
 
-  // 
-
+  // Make sure we can actually get out of the case machine
+  // and return control to the steering, front infared, etc.
+  if(caseProgression > 20){
+    lidarCase = 0;
+    lidarOn = 1 - lidarOn;
+    caseProgression = 0;
+  }
 }
 
 
@@ -238,7 +263,6 @@ double getAngle(double offset1, offset2){
 // Method to get the distance between the wall and the car
 double getWallDistance(double offset1, offset2, wallAngle){
   return ((offset1 + off2set) * cos(angle)) / 2;
-
 }
 
 
