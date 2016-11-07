@@ -1,7 +1,7 @@
 #include <XBee.h>
 #include <SoftwareSerial.h>
 
-uint8_t BEACON_ID = 1;
+uint8_t BEACON_ID = 2;
 
 XBee xbee = XBee();
 XBeeResponse response = XBeeResponse();
@@ -28,7 +28,7 @@ void setup()
 void sendTx(ZBTxRequest zbTx)
 {
   xbee.send(zbTx);
-  if (xbee.readPacket(10))
+  if (xbee.readPacket(500))
   {
     if (xbee.getResponse().getApiId() == ZB_TX_STATUS_RESPONSE)
       xbee.getResponse().getZBTxStatusResponse(txStatus);
@@ -54,7 +54,7 @@ int sendATCommand(AtCommandRequest atRequest)
 {
   int value = -1;
   xbee.send(atRequest);
-  if (xbee.readPacket(10))
+  if (xbee.readPacket(5000))
   {
     if (xbee.getResponse().getApiId() == AT_COMMAND_RESPONSE)
     {
@@ -62,10 +62,7 @@ int sendATCommand(AtCommandRequest atRequest)
       if (atResponse.isOk())
       {
         if (atResponse.getValueLength() > 0)
-        {
-          for (int i = 0; i < atResponse.getValueLength(); i++)
-            value = atResponse.getValue()[i];
-        }
+            value = atResponse.getValue()[atResponse.getValueLength() - 1];
       }
     }
   } 
