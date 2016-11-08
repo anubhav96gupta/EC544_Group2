@@ -3,6 +3,6 @@ A system that save's data collected	from a network of sensors and allow's	visual
 (b)	On the Raspberry Pi.
 
 VIDEO LINK:
-Part 1 : https://www.youtube.com/watch?v=P4_E7D5Ui_w
 
+Part 1 : https://www.youtube.com/watch?v=P4_E7D5Ui_w
 Part 2 : https://www.youtube.com/watch?v=Dv8TBjB0Jx4
