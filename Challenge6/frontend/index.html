@@ -78,10 +78,126 @@ script src="/socket.io/socket.io.js"></script>
 				//Black.style.left = parseInt(Black.style.left) + 20 + 'px';
 				//Black.style.top = parseInt(Black.style.top) + 10 + 'px';
 			}
+
+			function movePoint() {
+				
+				switch(location){
+					case 1:
+						Red.style.left = "80px";
+						Red.style.top = "260px";
+						break;
+					case 2:
+						Red.style.left = "160px";
+						Red.style.top = "260px";
+						break;		
+					case 3:
+						Red.style.left = "340px";
+						Red.style.top = "260px";
+						break;
+					case 4:
+						Red.style.left = "420px";
+						Red.style.top = "260px";
+						break;
+					case 5:
+						Red.style.left = "500px";
+						Red.style.top = "260px";
+						break;
+					case 6:
+						Red.style.left = "580px";
+						Red.style.top = "260px";
+						break;				
+					case 7:
+						Red.style.left = "660px";
+						Red.style.top = "260px";
+						break;				
+					case 8:
+						Red.style.left = "720px";
+						Red.style.top = "260px";
+						break;				
+					case 9:
+						Red.style.left = "800px";
+						Red.style.top = "260px";
+						break;				
+					case 10:
+						Red.style.left = "860px";
+						Red.style.top = "260px";
+						break;				
+					case 11:
+						Red.style.left = "860px";
+						Red.style.top = "380px";
+						break;				
+					case 12:
+						Red.style.left = "860px";
+						Red.style.top = "520px";
+						break;				
+					case 13:
+						Red.style.left = "860px";
+						Red.style.top = "680px";
+						break;				
+					case 14:
+						Red.style.left = "860px";
+						Red.style.top = "820px";
+						break;				
+					case 15:
+						Red.style.left = "800px";
+						Red.style.top = "820px";
+						break;				
+					case 16:
+						Red.style.left = "720px";
+						Red.style.top = "820px";
+						break;				
+					case 17:
+						Red.style.left = "660px";
+						Red.style.top = "820px";
+						break;				
+					case 18:
+						Red.style.left = "580px";
+						Red.style.top = "820px";
+						break;				
+					case 19:
+						Red.style.left = "500px";
+						Red.style.top = "820px";
+						break;				
+					case 20:	
+						Red.style.left = "420px";
+						Red.style.top = "820px";
+						break;
+					case 21:
+						Red.style.left = "340px";
+						Red.style.top = "820px";
+						break;
+					case 22:
+						Red.style.left = "160px";
+						Red.style.top = "820px";
+						break;
+					case 23:
+						Red.style.left = "80px";
+						Red.style.top = "820px";
+						break;
+					case 24:
+						Red.style.left = "80px";
+						Red.style.top = "680px";
+						break;
+					case 25:
+						Red.style.left = "80px";
+						Red.style.top = "520px";
+						break;
+					case 26:
+						Red.style.left = "80px";
+						Red.style.top = "370px";
+						break;															
+
+				} 
+
+				//Red.style.left = "80px";
+				//Red.style.top = "370px";
+
+			}
 		
             window.onload = init;
 			setInterval(function(){
-			moveRight();
+			//moveRight();
+			movePoint();
 			   }, 1000);
 </script>
 </head>
@@ -101,7 +217,7 @@ script src="/socket.io/socket.io.js"></script>
 	</div>
 </div>
 <div class="wrapper">
-	<img id="room" class="displayed" src="images/floorplan.png" margin-top="30px" position="relative" width="1000" height="700" alt="" /></div>
+	<img id="room" class="displayed" src="images/floorplan.png" margin-top="30px" position="absolute" width="1000" height="700" alt="" /></div>
 	<div style="margin:0 auto; width:1000px;"><img id="Red" class="point" src="images/Red.png" alt="CAR" position="absolute" height="30px" width="30px"/>
 	<!--img id="Green" class="point" src="images/Green.png" alt="CAR2" position="absolute" height="30px" width="30px"/-->
 	<!--img id="Black" class="point" src="images/Black.png" alt="CAR3" position="absolute" height="30px" width="30px"/-->
