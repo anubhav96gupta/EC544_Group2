@@ -3,6 +3,21 @@ var app = require('express')();
 var xbee_api = require('xbee-api');
 var KNN = require('ml-knn');
 
+var express = require('express')();
+var http = requre('http').Server(app);
+var io = require('socket.io')(http);
+
+
+app.use('/fonts', express.static(__dirname + 'frontend/fonts'));
+app.use('/images', express.static(__dirname + '/frontend/images'));
+app.use('/', express.static(__dirname + '/frontend'));
+
+
+app.get('/localization', function(req, res){
+  res.sendfile('frontend/index.html');
+});
+
+
 var fs = require('fs')
 var C = xbee_api.constants;
 var XBeeAPI = new xbee_api.XBeeAPI({
@@ -21,6 +36,17 @@ portConfig = {
 	baudRate: 9600,
   parser: XBeeAPI.rawParser()
 };
+
+io.on('connection', function(socket){
+  console.log('a user connected');
+  socket.on('disconnect', function(){
+  });
+});
+
+http.listen(4000, function(){
+  //listen on localhost port 4000
+  console.log('listening on *:4000');
+});
 
 var train = [[45,40,67.6,74],
 [49.2,40.8,69.8,74.6],
