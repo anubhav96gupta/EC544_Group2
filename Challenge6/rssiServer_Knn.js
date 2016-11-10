@@ -3,6 +3,19 @@ var app = require('express')();
 var xbee_api = require('xbee-api');
 var KNN = require('ml-knn');
 
+var express = require('express')();
+var http = requre('http').Server(app);
+var io = require('socket.io')(http);
+
+app.use('/fonts', express.static(__dirname + 'frontend/fonts'));
+app.use('/images', express.static(__dirname + '/frontend/images'));
+app.use('/', express.static(__dirname + '/frontend'));
+
+
+app.get('/localization', function(req, res){
+  res.sendfile('frontend/index.html');
+});
+
 //var csvWriter = require('csv-write-stream')
 var fs = require('fs')
 //var writer = csvWriter()
@@ -27,6 +40,20 @@ portConfig = {
 	baudRate: 9600,
   parser: XBeeAPI.rawParser()
 };
+
+// Connecting to the HTTP server and telling the code where to listen for incoming connections
+// and where to send outgoing connections
+io.on('connection', function(socket){
+  console.log('a user connected');
+  socket.on('disconnect', function(){
+  });
+});
+
+http.listen(4000, function(){
+  //listen on localhost port 4000
+  console.log('listening on *:4000');
+});
+
 
 var train = [
               [40,35,63,68],
