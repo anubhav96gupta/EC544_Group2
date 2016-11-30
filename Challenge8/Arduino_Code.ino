@@ -3,6 +3,10 @@
 #include <Servo.h>
 #include <SoftwareSerial.h>
 
+// TURNING MAX SPEED AND MAX WHEEL ANGLE
+double maxWheelOffset = 85;
+double maxSpeedOffset = 75;
+
 // XBEE PINS
 SoftwareSerial XBee(2, 3); // RX, TX
 int Trigger = 0;
@@ -96,6 +100,22 @@ void Ultrasonic()
   Cms_Out = Inc_Out*2.54;
 }
 
+double degToRad(double degrees){
+  return (degrees * 71) / 4068;
+}
+
+void oscillate(){
+  for (int i =210; i < 220; i++){
+    double rad = degToRad(i);
+    double speedOffset = sin(rad) * maxSpeedOffset;
+    double wheelOffset = sin(rad) * maxWheelOffset;
+    ESC.write(90 + speedOffset);
+    Steering_Wheels.write(90 + wheelOffset);
+    delay(70);
+  }
+  Steering_Wheels.write(90);
+}
+
 // Steering Crawler
 void Steer_Crawler()
 {
@@ -106,9 +126,21 @@ void Steer_Crawler()
     ESC.write(60);
   } 
 
-  if (LIDAR_R > 120)
+  if (LIDAR_R > 180)
   {
-    Steering_Wheels.write(100);
+    oscillate();
+    /*Steering_Wheels.write(100);
+    delay(2);
+    ESC.write(60);
+    delay(500);
+    Steering_Wheels.write(90);
+    delay(2);
+    ESC.write(60);*/
+  } 
+
+  if (LIDAR_L > 180)
+  {
+    Steering_Wheels.write(80);
     delay(2);
     ESC.write(60);
     delay(500);
@@ -160,7 +192,7 @@ void Controller()
 // MAIN LOOP
 void loop()
 {
-  if(XBee.available())                //Check XBEE Available
+  /*if(XBee.available())                //Check XBEE Available
   {
     int temp = XBee.read();           //Read From XBEE
     if(temp == 48)
@@ -171,7 +203,7 @@ void loop()
   }
   
   if(Trigger == 1)
-  {
+  {*/
     Ultrasonic();
     LIDAR();
     if (Cms_Out <= 35)           //Collision Avoidance
@@ -182,14 +214,14 @@ void loop()
     }
     else
       Controller();
-  }
+  /*}
   else
   if(Trigger == 0)
   {
     ESC.write(90);
     delay(1);
     Steering_Wheels.write(90);
-  }
+  }*/
  }
 
 
