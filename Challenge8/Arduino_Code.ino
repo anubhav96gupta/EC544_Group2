@@ -2,13 +2,25 @@
 #include <Wire.h>
 #include <Servo.h>
 #include <SoftwareSerial.h>
+#include <XBee.h>
+
+// GLOBAL FLAGS
+int POWER = 0;
+int SWITCH = 0;
+int PAUSE = 0;
+char COMMAND;
 
 // TURNING MAX SPEED AND MAX WHEEL ANGLE
 double maxWheelOffset = 85;
-double maxSpeedOffset = 75;
+double maxSpeedOffset = 70;
 
-// XBEE PINS
-SoftwareSerial XBee(2, 3); // RX, TX
+// XBEE VARIABLES
+XBee xbee = XBee();
+XBeeResponse response = XBeeResponse(); 
+ZBRxResponse rx = ZBRxResponse();
+ZBTxStatusResponse txStatus = ZBTxStatusResponse();
+SoftwareSerial xbeeSerial(2,3);
+
 int Trigger = 0;
 
 // DELAYS
@@ -40,7 +52,8 @@ double Kd = 0;
 // SETUP
 void setup()
 {
-  XBee.begin(9600);                                 //XBEE Baud Rate     
+  xbeeSerial.begin(9600);
+  xbee.setSerial(xbeeSerial); 
   LIDAR_Setup();                                    //LIDAR Setup Function Call
   LIDAR_Diff = LIDAR_Left - LIDAR_Right;
   Per_Angle_Change = 90 * (LIDAR_Diff/180);
@@ -95,16 +108,26 @@ void LIDAR()
 // ULTRASONIC OUTPUT
 void Ultrasonic()
 {
-  Pulse = pulseIn(ULTRA_PIN, HIGH);
-  Inc_Out = Pulse/147;
-  Cms_Out = Inc_Out*2.54;
+  Cms_Out = 0;
+  int i=5;
+  while(i>0)
+  {
+    Pulse = pulseIn(ULTRA_PIN, HIGH);
+    Inc_Out = Pulse/147;
+    Cms_Out += Inc_Out*2.54;
+  i--;
+  delay(10);
+  }
+  Cms_Out = Cms_Out/5;
 }
 
 double degToRad(double degrees){
   return (degrees * 71) / 4068;
 }
 
-void oscillate(){
+
+// OSCILLATE RIGHT
+/*void oscillate_R(){
   for (int i =210; i < 220; i++){
     double rad = degToRad(i);
     double speedOffset = sin(rad) * maxSpeedOffset;
@@ -114,36 +137,51 @@ void oscillate(){
     delay(70);
   }
   Steering_Wheels.write(90);
+}*/
+
+// OSCILLATE LEFT
+void oscillate_L(){
+  for (int i =60; i < 80; i++){
+    double rad = degToRad(i);
+    double speedOffset = sin(rad) * maxSpeedOffset;
+    double wheelOffset = sin(rad) * maxWheelOffset;
+    ESC.write(0 + speedOffset);
+    Steering_Wheels.write(90 + wheelOffset);
+    delay(70);
+  }
+  Steering_Wheels.write(90);
 }
+
 
 // Steering Crawler
 void Steer_Crawler()
 {
-  if (LIDAR_Diff > 90)
-  { 
+/*  if (LIDAR_R > 180)
+  {
+    oscillate_R();
+    Steering_Wheels.write(100);
+    delay(2);
+    ESC.write(60);
+    delay(500);
     Steering_Wheels.write(90);
     delay(2);
     ESC.write(60);
-  } 
+  } */
 
-  if (LIDAR_R > 180)
+  if (LIDAR_L > 180)
   {
-    oscillate();
-    /*Steering_Wheels.write(100);
+    oscillate_L();
+    /*Steering_Wheels.write(80);
     delay(2);
     ESC.write(60);
     delay(500);
     Steering_Wheels.write(90);
     delay(2);
     ESC.write(60);*/
-  } 
+  }
 
-  if (LIDAR_L > 180)
-  {
-    Steering_Wheels.write(80);
-    delay(2);
-    ESC.write(60);
-    delay(500);
+   if (LIDAR_Diff > 90)
+  { 
     Steering_Wheels.write(90);
     delay(2);
     ESC.write(60);
@@ -189,39 +227,145 @@ void Controller()
   Steer_Crawler();
 }
 
+int RecievePacket()
+{
+ xbee.readPacket(50); 
+ if (xbee.getResponse().isAvailable())
+  {
+    if (xbee.getResponse().getApiId() == ZB_RX_RESPONSE)
+    {
+      xbee.getResponse().getZBRxResponse(rx);
+      return rx.getData(0);
+    }
+  }
+  else
+    return 0;
+}
+
 // MAIN LOOP
 void loop()
 {
-  /*if(XBee.available())                //Check XBEE Available
+   int receive = RecievePacket();
+   switch(receive)
+   {
+    case 48:
+      POWER = 0;
+      break;
+      
+    case 49:
+      POWER = 1;
+      break;
+      
+    case 77:
+      SWITCH = 1;
+      break;
+
+    case 65:
+      SWITCH = 0;
+      break;
+
+    case 70:
+      COMMAND = 'F';
+      break;
+
+    case 66:
+      COMMAND = 'B';
+      break;
+
+    case 82:
+      COMMAND = 'R';
+      break;
+
+    case 76:
+      COMMAND = 'L';
+      break;
+
+    case 80:
+      PAUSE = 1;
+      break;
+
+    case 67:
+      PAUSE = 0;
+      break;
+
+    default:
+      break;
+   }
+  if(POWER)
   {
-    int temp = XBee.read();           //Read From XBEE
-    if(temp == 48)
-      Trigger = 0;                    //Assign Value To Trigger
-    else
-    if(temp == 49)
-      Trigger = 1;                    //Assign Value To Trigger
-  }
-  
-  if(Trigger == 1)
-  {*/
-    Ultrasonic();
-    LIDAR();
-    if (Cms_Out <= 35)           //Collision Avoidance
+    Serial.println("INSIDE POWER ON");
+    if(SWITCH)
     {
-      ESC.write(90);
-      delay(1);
-      Steering_Wheels.write(90);
+      Serial.println("INSIDE MANUAL");
+      if(!PAUSE)
+      {
+        Serial.println("INSIDE CONTINUE");
+        switch(COMMAND)
+        {
+          case 'F':
+            Steering_Wheels.write(90);
+            delay(2);
+            ESC.write(60);
+            Serial.println("INSIDE FORWARD");       
+            break;
+            
+          case 'B':
+            Steering_Wheels.write(90);
+            delay(2);
+            ESC.write(120);
+            break;
+            
+          case 'R':
+            Steering_Wheels.write(70);
+            ESC.write(70);
+            delay(1500);
+            ESC.write(90);         
+            break;
+            
+          case 'L':
+            Steering_Wheels.write(110);
+            ESC.write(70);
+            delay(1500);
+            ESC.write(90);         
+            break;
+        }
+      }
+      else
+      if(PAUSE)
+      {
+         Serial.println("INSIDE PAUSE");
+         ESC.write(90);
+         delay(10);
+         Steering_Wheels.write(90); 
+      }
     }
     else
-      Controller();
-  /*}
+    if(SWITCH == 0)
+    {
+      Serial.println("INSIDE AUTO");
+      Ultrasonic();
+      LIDAR();
+      if (Cms_Out <= 80)           //Collision Avoidance
+      {
+        ESC.write(90);
+        delay(1);
+        Steering_Wheels.write(90);
+      }
+      else
+        Controller();
+    }
+  }
   else
-  if(Trigger == 0)
+  if(POWER == 0)
   {
+    int POWER = 0;
+    int SWITCH = 0;
+    int PAUSE = 0;
+    Serial.println("INSIDE POWER OFF");
     ESC.write(90);
-    delay(1);
+    delay(10);
     Steering_Wheels.write(90);
-  }*/
- }
+  }
+}
 
 
