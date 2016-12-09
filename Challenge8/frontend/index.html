@@ -1,0 +1,333 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Challenge 8 Group 2</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900|Quicksand:400,700|Questrial" rel="stylesheet" />
+<link href="default.css" rel="stylesheet" type="text/css" media="all" />
+<link href="fonts.css" rel="stylesheet" type="text/css" media="all" />
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+<!--[if IE 6]><link href="default_ie6.css" rel="stylesheet" type="text/css" /><![endif]-->
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+
+
+ <script>
+  var socket = io();
+  var location1 = [0,0];
+  var location2 = [0,0]; 
+  var location3 = [0,0];
+  var data;
+  var Power = 0;
+  var Switch = 0;
+  socket.on('location', function(location){
+  	//location3 = location2;
+  	//location2 = location1; 
+    	//location1 = [parseInt(location) / 6 * 25, ((parseInt(location) % 6) - 1) * 28];
+	data = parseInt(location);
+	console.log("adfasdfasdf");
+	console.log("data is " + data);
+	//$('#location').text(location.data);
+	//process.stdout.write(data.letter);
+	//addMessae(data.message);
+	//$("bullshit").update("new text");
+
+  });
+</script>
+
+<script>
+   var Red = null;
+   //var Green = null;
+   //var Black = null;
+   var xbeer = null;
+   var xbeel = null;
+   var xbeeb = null;
+
+  var i=1;
+            function init(){
+               
+			   Red = document.getElementById('Red');
+			   xbeer = document.getElementById('right');
+			   xbeel = document.getElementById('left');
+			   xbeeb = document.getElementById('bottom');
+			   xbeeb2 = document.getElementById('bottom2');
+               Red.style.position= 'absolute'; 
+               Red.style.left ="300px";
+			   Red.style.top="130px";
+			   xbeer.style.position='absolute';
+			   xbeer.style.left="880px";
+			   xbeer.style.top="770px";
+			   xbeel.style.position='absolute';
+			   xbeel.style.left="10px";
+			   xbeel.style.top="130px";
+			   xbeeb.style.position='absolute';
+			   xbeeb.style.left="10px";
+			   xbeeb.style.top="750px";
+			   xbeeb2.style.position='absolute';
+			   xbeeb2.style.left="880px";
+			   xbeeb2.style.top="130px";
+            }
+			function moveRight(){
+				Red.style.left = 310 + Math.round(location1[0] * 2.95) + 'px';
+				Red.style.top = 459 + Math.round(location1[1] * 2.43) + 'px';
+			}
+
+			function movePoint() {
+				//console.log("inside movePoint")
+				
+				switch(data){
+					case 1: // Window Corner before start
+						Red.style.left = "130px";
+						Red.style.top = "700px";
+						break;
+					case 2: // hallway start
+						Red.style.left = "380px";
+						Red.style.top = "700px";
+						break;		
+					case 3: // hallway
+						Red.style.left = "530px";
+						Red.style.top = "700px";
+						break;
+					case 4: // hallway
+						Red.style.left = "690px";
+						Red.style.top = "700px";
+						break;
+					case 5: // hallway
+						Red.style.left = "840px";
+						Red.style.top = "700px";
+						break;
+					case 6: // turn 1 corner
+						Red.style.left = "940px";
+						Red.style.top = "700px";
+						break;				
+					case 7: // elevator
+						Red.style.left = "940px";
+						Red.style.top = "380px";
+						break;				
+					case 8: // turn 2 corner
+						Red.style.left = "940px";
+						Red.style.top = "130px";
+						break;				
+					case 9: // hallway 
+						Red.style.left = "740px";
+						Red.style.top = "150px";
+						break;				
+					case 10: // hallway
+						Red.style.left = "600px";
+						Red.style.top = "130px";
+						break;				
+					case 11: // hallway
+						Red.style.left = "450px";
+						Red.style.top = "130px";
+						break;				
+					case 12: //hallway
+						Red.style.left = "300px";
+						Red.style.top = "130px";
+						break;				
+					case 13: // turn 3 corner
+						Red.style.left = "130px";
+						Red.style.top = "130px";
+						break;				
+					case 14: // Window Box 
+						Red.style.left = "130px";
+						Red.style.top = "500px";
+						break;				
+				} 
+
+			}
+
+			function PowerOn(){
+				var state = '1';
+    			socket.emit('states', state);
+			}
+			function PowerOff(){
+				var state = '0';
+    			socket.emit('states', state);
+			}
+				
+
+			function Manual(){
+				var state = 'M';
+    			socket.emit('states', state);
+			}
+			function Auto(){
+				var state = 'A';
+    			socket.emit('states', state);
+			}
+				
+            window.onload = init;
+			setInterval(function(){
+			movePoint();
+			//Power(Power);
+			   }, 1000);
+</script>
+<style type="text/css">
+    div.crawler {
+        position: absolute;
+        top: 46%;
+        left: 22.5%;
+        width: 52%;
+        height: 69%;
+        background-color:rgba(0,0,0,0.5);
+        border-radius:9px;
+    }
+    
+</style>
+</head>
+<body>
+<div id="header-wrapper">
+	<img id="background" class="displayed" src="images/background.jpg" margin-top="30px" position="relative" width="1300" height="100" alt="" /></div>
+	<div id="header" class="container">
+	<button id="Pon" accesskey="i" onClick="PowerOn();" class="button button3">PowerOn</button>
+	<button id="Poff" accesskey="o" onClick="PowerOff();" class="button button4">PowerOff</button><br />
+	<button id="M" accesskey="k" onClick="Manual();">Manual</button>
+	<button id="A" accesskey="l" onClick="Auto();">Auto</button>
+	</div>
+</div>
+	<div class="wrapper">
+	<img id="room" class="displayed" src="images/floorplan.png" margin-top="30px" position="relative" width="1000" height="700" alt="" /></div>
+	<div style="margin:0 auto; width:1000px;"><img id="Red" class="point" src="images/Red.png" alt="CAR" position="relative" height="30px" width="30px"/>
+    <img id="left" class="point" src="images/Xbeel.jpeg" alt="XBEE" position="absolute" height="30px" width="30px" top="50%" left="30%"/>
+    <img id="right" class="point" src="images/Xbeer.jpeg" alt="XBEE" position="absolute" height="30px" width="30px" top="20%" right="30%"/>
+    <img id="bottom" class="point" src="images/Xbeel.jpeg" alt="XBEE" position="absolute" height="30px" width="30px" top="60%" left="30%"/>
+    <img id="bottom2" class="point" src="images/Xbeer.jpeg" alt="XBEE" position="absolute" height="30px" width="30px" top="60%" right="30%"/>
+	<div id="welcome" class="container">
+    	
+<style>
+.button {
+    
+    border: none;
+    color: white;
+    padding: 10px 24px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 8px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+.button1 {border-radius: 100%;background-color: #4CAF50; /* Green */}
+.button2 {border-radius: 100%;background-color: #f44336; /* Red */}
+.button3 {border-radius: 25%;background-color: #4CAF50; /* Green */}
+.button4 {border-radius: 25%;background-color: #f44336; /* Red */}
+.button5 {border-radius: 25%;background-color: #4CAF50; /* Green */}
+.button6 {border-radius: 25%;background-color: #f44336; /* Red */}
+
+</style>
+
+<div class="crawler">
+  <h3 align="middle"  style="font-size:3.0vh; margin-top:3%; color:rgba(255,255,255,1)">Crawler</h3>
+  <img id="video" src="http://192.168.1.157:8080/?action=stream" width="70%" height="50%" style=" position: relative; margin: auto; top: 0; left: 0; right: 0; bottom: 0" />
+  <button id="C" onClick="Continue()" accesskey = "e" style="display:block; font-weight:bold;font-size:1.8vh; text-align: middle; position: absolute; top:85%; left: 10%" class="button button1" align ="top">Continue</button>
+
+  <button id="P" onClick="Pause();" accesskey="q" style="display:block; font-weight:bold;font-size:1.8vh; text-align: middle; position: absolute; top:85%; right: 10%" class="button button2" align ="top">Pause</button>
+  
+  <button id="F" onClick="Forward();" accesskey="w" style="display:block; font-weight:bold;font-size:1.8vh; text-align: middle; position: absolute; top:75%; left: 45%" class="pure-button pure-button-primary" align ="top"><img src="images/up.png" height="40" width="40"></button>
+  
+  <button id="B" onClick="Backward();" accesskey="s" style="display:block; font-weight:bold;font-size:1.8vh; text-align: middle; position: absolute; top:85%; left: 45%" class="pure-button pure-button-primary" align ="top"><img src="images/down.png" height="40" width="40"></button>
+  
+  <button id="L" onClick="Left();" accesskey="a" style="display:block; font-weight:bold;font-size:1.8vh; text-align: middle; position: absolute; top:85%; left: 36%" class="pure-button pure-button-primary" align ="top"><img src="images/left.png" height="40" width="40"></button>
+  
+  <button id="R" onClick="Right();" accesskey="d" style="display:block; font-weight:bold;font-size:1.8vh; text-align: middle; position: absolute; top:85%; right: 37%" class="pure-button pure-button-primary" align ="top"><img src="images/right.png" height="40" width="40"></button>
+</div>
+<script>
+  var forward = document.getElementById("F");
+  var backward = document.getElementById("B");
+  var left = document.getElementById("L");
+  var right = document.getElementById("R");
+  var Pon = document.getElementById("Pon");
+  var Poff = document.getElementById("Poff");
+  var manual = document.getElementById("M");
+  var auto = document.getElementById("A");
+  var pause = document.getElementById("P");
+  var Go = document.getElementById("C");
+
+  function clicked(){
+  	alert('clicked!');
+  }
+
+  document.onkeydown = function(e){
+  	var keyCode = e.keyCode;
+  	if(keyCode == 87){
+  		//clicked();
+  		Forward();
+  		forward.onClick = clicked;
+  	}
+  	if(keyCode == 83){
+  		//clicked();
+  		Backward();
+  		backward.onClick = clicked;
+  	}
+  	if(keyCode == 65){
+  		//clicked();
+  		Left();
+  		left.onClick = clicked;
+  	}
+  	if(keyCode == 68){
+  		//clicked;
+  		Right();
+  		right.onClick = clicked;
+  	}
+	if(keyCode == 13){
+		PowerOn();
+		Pon.onClick = clicked;
+	}
+	if(keyCode == 80){
+		PowerOff();
+		Poff.onClick = clicked;
+	}
+	if(keyCode == 77){
+		Manual();
+		M.onClick = clicked;
+	}
+	if(keyCode == 78){
+		Auto();
+		A.onClick = clicked;
+	}
+	if(keyCode == 32){
+		Pause();
+		pause.onClick = clicked;
+	}
+	if(keyCode == 67){
+		Continue();
+		Go.onClick = clicked;
+	}
+  } 
+
+  function Continue() {
+    var state = 'C';
+    socket.emit('states', state);
+  }
+  function Pause() {
+    var state = 'P';
+    socket.emit('states', state);
+  }
+  function Forward(){
+    var state = 'F';
+    socket.emit('states', state);
+    
+  }
+  function Backward(){
+    var state = 'B';
+    socket.emit('states', state);
+    
+  }
+  function Left(){
+    var state = 'L';
+    socket.emit('states', state);
+    
+  }
+  function Right(){
+    var state = 'R';
+    socket.emit('states', state);
+    
+  }
+</script>
+
+</body>
+</html>
+
