@@ -18,3 +18,6 @@ Non-Leade Specific:
 2. Upon receiving a clear infection message, a non-leader will return to the not infected state and propagate the clear infection message to its neighbors.
 3. Infections are persistent; repeat infections can occur if any of the non-leaders in the network are not cleared.
 4. A non-leader is immune to infection for 3 seconds following a clear infection message to prevent immediate re-infection.
+
+
+Video - https://www.youtube.com/watch?v=eFDwL-RY_rk&feature=youtu.be
